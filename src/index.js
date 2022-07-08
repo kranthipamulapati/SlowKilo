@@ -1,21 +1,24 @@
 import React from "react";
-
 import ReactDOM from "react-dom/client";
 
 import App from "./App";
 
-import "./index.css";
+import {UserProvider} from "./context/user";
+import {FirebaseProvider} from "./context/firebase";
 
-import {FirebaseContext} from "./context/firebase";
-import {auth, firebase, firestore, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "./lib/firebase";
+import "./index.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   	<React.StrictMode>
-		<FirebaseContext.Provider value={{auth, firebase, firestore, signInWithEmailAndPassword, createUserWithEmailAndPassword}}>
 
-    		<App />			
+		<FirebaseProvider>
+			<UserProvider>
 
-		</FirebaseContext.Provider>
+    			<App />
+				
+			</UserProvider>
+		</FirebaseProvider>
+
   	</React.StrictMode>
 );

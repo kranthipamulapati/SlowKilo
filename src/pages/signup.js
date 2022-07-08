@@ -1,20 +1,19 @@
 import React, {useState, useEffect, useContext} from "react";
-
 import {Link, useNavigate} from "react-router-dom";
 
-import {FirebaseContext} from "../context/firebase";
-
 import * as ROUTES from "../constants/routes";
+
+import {FirebaseContext} from "../context/firebase";
 
 function Signup() {
     
     let navigate = useNavigate();
-    const {auth, createUserWithEmailAndPassword} = useContext(FirebaseContext);
+    const {auth, addDoc, firestore, collection, updateProfile, doesUsernameExist, createUserWithEmailAndPassword} = useContext(FirebaseContext);
 
     const [username, setUsername] = useState("");
     const [fullName, setFullName] = useState("");
-    const [emailAddress, setEmailAddress] = useState("");
     const [password, setPassword] = useState("");
+    const [emailAddress, setEmailAddress] = useState("");
 
     const [error, setError] = useState(false);
     const isInvalid = password === "" || emailAddress === "";
@@ -22,14 +21,42 @@ function Signup() {
     const handleSignup = async (e) => {
         e.preventDefault();
 
-        try {
-            await createUserWithEmailAndPassword(auth, emailAddress, password);
-            navigate(ROUTES.DASHBOARD, {replace : true});
-        } catch (error) {
-            setEmailAddress("");
-            setPassword("");
-            setError(error.message);
-        }
+        const usernameExists = await doesUsernameExist(username);
+        if(usernameExists === false) {
+
+            try {
+
+                await createUserWithEmailAndPassword(auth, emailAddress, password);
+                await updateProfile(auth.currentUser, {
+                    displayName : username
+                });
+
+                await addDoc(collection(firestore, "users"), {
+                    userId : auth.currentUser.uid,
+                    username : username.toLowerCase(),
+                    fullName,
+                    emailAddress : emailAddress.toLowerCase(),
+                    following : [],
+                    followers : [],
+                    dateCreated : Date.now()
+                });
+
+                navigate(ROUTES.DASHBOARD, {replace : true});
+
+            } catch (error) {
+            
+                setUsername("");
+                setFullName("");
+                setPassword("");
+                setEmailAddress("");
+                setError(error.message);
+
+            }
+            
+        } else {
+            setUsername("");
+            setError("Username already exists. Please try another.");
+        } 
     };
 
     useEffect(() => {
