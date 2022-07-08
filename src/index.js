@@ -7,12 +7,12 @@ import App from "./App";
 import "./index.css";
 
 import {FirebaseContext} from "./context/firebase";
-import {firebase, FieldValue} from "./lib/firebase";
+import {auth, firebase, firestore, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "./lib/firebase";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   	<React.StrictMode>
-		<FirebaseContext.Provider value={{firebase, FieldValue}}>
+		<FirebaseContext.Provider value={{auth, firebase, firestore, signInWithEmailAndPassword, createUserWithEmailAndPassword}}>
 
     		<App />			
 

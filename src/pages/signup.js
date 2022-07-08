@@ -6,22 +6,24 @@ import {FirebaseContext} from "../context/firebase";
 
 import * as ROUTES from "../constants/routes";
 
-function Login() {
+function Signup() {
     
     let navigate = useNavigate();
-    const {auth, signInWithEmailAndPassword} = useContext(FirebaseContext);
+    const {auth, createUserWithEmailAndPassword} = useContext(FirebaseContext);
 
+    const [username, setUsername] = useState("");
+    const [fullName, setFullName] = useState("");
     const [emailAddress, setEmailAddress] = useState("");
     const [password, setPassword] = useState("");
 
     const [error, setError] = useState(false);
     const isInvalid = password === "" || emailAddress === "";
 
-    const handleLogin = async (e) => {
+    const handleSignup = async (e) => {
         e.preventDefault();
 
         try {
-            await signInWithEmailAndPassword(auth, emailAddress, password);
+            await createUserWithEmailAndPassword(auth, emailAddress, password);
             navigate(ROUTES.DASHBOARD, {replace : true});
         } catch (error) {
             setEmailAddress("");
@@ -31,7 +33,7 @@ function Login() {
     };
 
     useEffect(() => {
-        document.title = "SlowKilo - Login";
+        document.title = "SlowKilo - Signup";
     });
 
 	return (
@@ -50,7 +52,25 @@ function Login() {
 
                     {error && <p className="mb-4 text-xs text-red-primary">{error}</p>}
 
-                    <form onSubmit={handleLogin} method="POST">
+                    <form onSubmit={handleSignup} method="POST">
+
+                        <input 
+                            type="text" 
+                            placeholder="Username" 
+                            aria-label="Enter your Username" 
+                            className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
+                            onChange={(e) => setUsername(e.target.value)}
+                            value={username}
+                        />
+
+                        <input 
+                            type="text" 
+                            placeholder="Full name" 
+                            aria-label="Enter your full name" 
+                            className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
+                            onChange={(e) => setFullName(e.target.value)}
+                            value={fullName}
+                        />
 
                         <input 
                             type="text" 
@@ -58,6 +78,7 @@ function Login() {
                             aria-label="Enter your email address" 
                             className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
                             onChange={(e) => setEmailAddress(e.target.value)}
+                            value={emailAddress}
                         />
 
                         <input 
@@ -66,20 +87,21 @@ function Login() {
                             aria-label="Enter your password" 
                             className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
                             onChange={(e) => setPassword(e.target.value)}
+                            value={password}
                         />
 
                         <button
                             type="submit"
                             disabled={isInvalid}
                             className={`bg-blue-medium text-white w-full rounded h-8 font-bold ${isInvalid && "opacity-50"}`}
-                        >Login</button>
+                        >Signup</button>
 
                     </form>
                 </div>
             
                 <div className="flex justify-center items-center flex-col w-full bg-white p-4 rounded border border-gray-primary">
                     <p className="text-sm">Don't have an account?{` `}
-                        <Link to={ROUTES.SIGN_UP} className="font-bold text-blue-medium">Sign Up</Link>
+                        <Link to={ROUTES.LOGIN} className="font-bold text-blue-medium">Login</Link>
                     </p>
                 </div>
 
@@ -88,4 +110,4 @@ function Login() {
 	);
 }
 
-export default Login;
+export default Signup;

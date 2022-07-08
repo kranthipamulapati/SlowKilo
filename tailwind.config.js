@@ -9,6 +9,18 @@ module.exports = {
         white : "#ffffff",
         blue  : {
           medium: "#005c98"
+        },
+        balck : {
+          medium : "#005c98",
+          faded : "#00000059"
+        },
+        gray : {
+          base : "#616161",
+          background : "#fafafa",
+          primary : "#dbdbdb"
+        },
+        red : {
+          primary : "#ed4956"
         }
       }
     },
