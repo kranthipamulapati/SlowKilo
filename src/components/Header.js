@@ -9,7 +9,7 @@ import * as ROUTES from "../constants/routes";
 export default function Header() {
 
     const {auth, signOut} = useContext(FirebaseContext);
-    const user = useContext(UserContext);
+    const {user} = useContext(UserContext);
 
     return (
         <header className="h-16 bg-white border-b border-gray-primary mb-8">

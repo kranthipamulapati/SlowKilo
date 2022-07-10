@@ -1,4 +1,4 @@
-import {createContext} from "react";
+import React, {createContext} from "react";
 
 import {initializeApp} from "firebase/app";
 import {query, where, addDoc, getDocs, collection, getFirestore} from "firebase/firestore";
@@ -17,20 +17,20 @@ const firebase = initializeApp(config);
 const firestore = getFirestore(firebase);
 const auth = getAuth();
 
-const FirebaseContext = createContext(null);
-const value = {auth, firebase, firestore, where, query, addDoc, getDocs, signOut, collection, updateProfile, doesUsernameExist, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword};
-
-const FirebaseProvider = ({children}) => {
-
-    return <FirebaseContext.Provider value={value}>
-        {children}
-    </FirebaseContext.Provider>;
-};
-
 async function doesUsernameExist(username) {
     const results = await getDocs(query(collection(firestore, "users"), where("username", "==", username)));
 
     return !!results.size;
+};
+
+const FirebaseContext = createContext(null);
+const FirebaseProvider = ({children}) => {
+
+    const value = {auth, firebase, firestore, where, query, addDoc, getDocs, signOut, collection, updateProfile, doesUsernameExist, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword};
+
+    return <FirebaseContext.Provider value={value}>
+        {children}
+    </FirebaseContext.Provider>;
 };
 
 export {FirebaseContext, FirebaseProvider};

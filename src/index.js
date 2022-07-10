@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 
 import App from "./App";
 
-import {UserProvider} from "./context/user";
 import {FirebaseProvider} from "./context/firebase";
+import {UserProvider} from "./context/user";
 
 import "./index.css";
 
@@ -16,7 +16,7 @@ root.render(
 			<UserProvider>
 
     			<App />
-				
+
 			</UserProvider>
 		</FirebaseProvider>
 
