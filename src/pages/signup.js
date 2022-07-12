@@ -1,14 +1,12 @@
-import React, {useState, useEffect, useContext} from "react";
+import React, {useState, useEffect} from "react";
 import {Link, useNavigate} from "react-router-dom";
 
 import * as ROUTES from "../constants/routes";
 
-import {FirebaseContext} from "../context/firebase";
+import {auth, addDoc, firestore, collection, updateProfile, doesUsernameExist, createUserWithEmailAndPassword} from "../utils/firebase";
 
-function Signup() {
-    
+function Signup() {    
     let navigate = useNavigate();
-    const {auth, addDoc, firestore, collection, updateProfile, doesUsernameExist, createUserWithEmailAndPassword} = useContext(FirebaseContext);
 
     const [username, setUsername] = useState("");
     const [fullName, setFullName] = useState("");

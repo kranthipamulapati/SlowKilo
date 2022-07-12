@@ -1,14 +1,13 @@
 import React, {useContext} from "react";
 import {Link} from "react-router-dom";
 
-import {FirebaseContext} from "../context/firebase";
 import {UserContext} from "../context/user";
+import {auth, signOut} from "../utils/firebase";
 
 import * as ROUTES from "../constants/routes";
 
 export default function Header() {
 
-    const {auth, signOut} = useContext(FirebaseContext);
     const {user} = useContext(UserContext);
 
     return (
