@@ -3,21 +3,22 @@ import {useState, useEffect} from "react";
 import {auth, onAuthStateChanged} from "../utils/firebase";
 
 export default function useAuthListener() {
-    const [user, setUser] = useState(JSON.stringify(localStorage.getItem("authUser")));
+    const [user, setUser] = useState({});
 
     useEffect(function() {
-        const listener = onAuthStateChanged(auth, (authUser) => {
-            if(authUser) {
-                localStorage.setItem("authUser", JSON.stringify(authUser));
-                setUser(authUser);
+        const listener = onAuthStateChanged(auth, (authInfo) => {
+
+            if(authInfo) {
+                localStorage.setItem("authInfo", JSON.stringify(authInfo));
+                setUser(authInfo);
             } else {
-                localStorage.removeItem("authUser");
-                setUser(null);
+                localStorage.removeItem("authInfo");
+                setUser({});
             }
         });
 
         return () => listener();
     }, []);
 
-    return {user};
+    return user;
 }

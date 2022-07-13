@@ -2,13 +2,14 @@ import React, {useContext} from "react";
 import {Link} from "react-router-dom";
 
 import {UserContext} from "../context/user";
+
 import {auth, signOut} from "../utils/firebase";
 
 import * as ROUTES from "../constants/routes";
 
 export default function Header() {
 
-    const {user} = useContext(UserContext);
+    const {authInfo, userInfo} = useContext(UserContext);
 
     return (
         <header className="h-16 bg-white border-b border-gray-primary mb-8">
@@ -25,7 +26,7 @@ export default function Header() {
                     </div>
 
                     <div className="text-gray-700 text-center flex items-center align-items">
-                        {user ? (
+                        {authInfo.uid ? (
                             <>
                             
                                 <Link to={ROUTES.DASHBOARD} aria-label="Dashboard">
@@ -50,13 +51,13 @@ export default function Header() {
 
                                 </button>
 
-                                {user && (
+                                {authInfo.uid && (
                                     <div className="flex items-center cursor-pointer">
-                                        <Link to={`/p/${user?.username}`}>
+                                        <Link to={`/p/${userInfo?.username}`}>
                                         <img
                                             className="rounded-full h-8 w-8 flex"
-                                            src={`/images/avatars/${user?.username}.jpg`}
-                                            alt={`${user?.username} profile`}
+                                            src={`/images/avatars/${userInfo?.username}.jpg`}
+                                            alt={`${userInfo?.username} profile`}
                                             onError={(e) => {
                                                 //e.target.src = DEFAULT_IMAGE_PATH;
                                             }}

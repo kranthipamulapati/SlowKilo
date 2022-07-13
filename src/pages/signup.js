@@ -3,7 +3,7 @@ import {Link, useNavigate} from "react-router-dom";
 
 import * as ROUTES from "../constants/routes";
 
-import {auth, addDoc, firestore, collection, updateProfile, doesUsernameExist, createUserWithEmailAndPassword} from "../utils/firebase";
+import {doc, auth, addDoc, setDoc, firestore, collection, updateProfile, doesUsernameExist, createUserWithEmailAndPassword} from "../utils/firebase";
 
 function Signup() {    
     let navigate = useNavigate();
@@ -25,11 +25,13 @@ function Signup() {
             try {
 
                 await createUserWithEmailAndPassword(auth, emailAddress, password);
+                
                 await updateProfile(auth.currentUser, {
                     displayName : username
                 });
 
-                await addDoc(collection(firestore, "users"), {
+                let user = await addDoc(collection(firestore, "users"), {
+                    docId : 0,
                     userId : auth.currentUser.uid,
                     username : username.toLowerCase(),
                     fullName,
@@ -38,6 +40,10 @@ function Signup() {
                     followers : [],
                     dateCreated : Date.now()
                 });
+
+                await setDoc(doc(firestore, "users", user.id), {
+                    docId : user.id
+                }, {merge : true});
 
                 navigate(ROUTES.DASHBOARD, {replace : true});
 

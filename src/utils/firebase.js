@@ -1,5 +1,5 @@
 import {initializeApp} from "firebase/app";
-import {query, where, addDoc, getDocs, collection, getFirestore} from "firebase/firestore";
+import {doc, query, where, addDoc, setDoc, getDocs, collection, arrayUnion, arrayRemove, getFirestore} from "firebase/firestore";
 import {getAuth, signOut, updateProfile, onAuthStateChanged, signInWithEmailAndPassword, createUserWithEmailAndPassword} from "firebase/auth";
 
 const config = {
@@ -11,14 +11,62 @@ const config = {
     appId: "1:154051748722:web:229ec3518ccd39ff1f73eb"
 };
 
-const firebase = initializeApp(config);
-const firestore = getFirestore(firebase);
-const auth = getAuth();
+export const firebase = initializeApp(config);
+export const firestore = getFirestore(firebase);
+export const auth = getAuth();
 
-async function doesUsernameExist(username) {
+export async function doesUsernameExist(username) {
     const results = await getDocs(query(collection(firestore, "users"), where("username", "==", username)));
 
     return !!results.size;
 };
 
-export {auth, firebase, firestore, where, query, addDoc, getDocs, signOut, collection, updateProfile, onAuthStateChanged, doesUsernameExist, signInWithEmailAndPassword, createUserWithEmailAndPassword};
+export async function getUserByUserId(userId) {
+    let results = await getDocs(query(collection(firestore, "users"), where("userId", "==", userId)));
+
+    return results.docs[0].data();
+};
+
+export async function getSuggestedProfiles(userId, following) {
+    let results = await getDocs(query(collection(firestore, "users"), where("userId", "!=", userId)));
+
+    return results.docs.map((profile) => profile.data()).filter((profile) => !following.includes(profile.userId));
+};
+
+export async function updateLoggedInUserFollowing(loggedInUserDocId, profileUserId, isFollowingProfile) {
+    return await setDoc(doc(firestore, "users", loggedInUserDocId), {
+        
+        following : isFollowingProfile ? arrayRemove(profileUserId) : arrayUnion(profileUserId),
+    }, {merge : true});
+};
+
+export async function updateFollowedUserFollowers(profileDocId, loggedInUserUserId, isFollowingProfile) {
+    return await setDoc(doc(firestore, "users", profileDocId), {
+
+        followers : isFollowingProfile ? arrayRemove(loggedInUserUserId) : arrayUnion(loggedInUserUserId),
+    }, {merge : true});
+};
+
+export async function getPhotos(userId, following) {
+    let results = await getDocs(query(collection(firestore, "photos"), where(userId, "in", "following")));
+
+    return results.docs.map((photo) => ({
+        ...photo.data(),
+        docId : photo.id
+    }));
+};
+
+export {
+    doc,
+    where, 
+    query, 
+    setDoc,
+    addDoc, 
+    getDocs, 
+    signOut, 
+    collection, 
+    updateProfile, 
+    onAuthStateChanged, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword
+};
