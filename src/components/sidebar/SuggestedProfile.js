@@ -5,21 +5,24 @@ import {updateFollowedUserFollowers, updateLoggedInUserFollowing} from "../../ut
 
 export default function SuggestedProfile({userInfo, profile}) {
 
+    const {userId, docId : userDocId} = userInfo;
+    const {profileId, docId : profileDocId, username} = profile;
+
     const [followed, setFollowed] = useState(false);
 
     async function handleFollowUser() {
         setFollowed(true);
 
-        await updateLoggedInUserFollowing(userInfo.docId, profile.userId, false);
-        await updateFollowedUserFollowers(profile.docId, userInfo.userId, false);
+        await updateLoggedInUserFollowing(userDocId, profileId, false);
+        await updateFollowedUserFollowers(profileDocId, userId, false);
     }
 
     return !followed ? (
         <div className="flex flex-row items-center align-items justify-between">
             <div className="flex items-center justify-between">
-                <img className="rounded-full w-8 flex mr-3" src={`/images/avatars/${profile.username}.jpg`} alt={profile.username} />
-                <Link to={`/p/${profile.username}`}>
-                    <p className="font-bold text-sm">{profile.username}</p>
+                <img className="rounded-full w-8 flex mr-3" src={`/images/avatars/${username}.jpg`} alt={username} />
+                <Link to={`/p/${username}`}>
+                    <p className="font-bold text-sm">{username}</p>
                 </Link>
             </div>
             <div>

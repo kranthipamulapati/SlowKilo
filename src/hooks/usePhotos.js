@@ -1,27 +1,24 @@
 import {useState, useEffect} from "react";
 
-import {getPhotos, getUserByUserId} from "../utils/firebase";
+import {getPhotos} from "../utils/firebase";
 
-export default function usePhotos(userId) {
+export default function usePhotos({userId, following}) {
     const [photos, setPhotos] = useState([]);
+
+    console.log(photos)
     
     useEffect(() => {
         
         async function getTimelinePhotos() {
-            const {following} = await getUserByUserId(userId);
-
-            if(following.legth > 0) {
-                let followedUserPhotos = await getPhotos(userId, following);
-            }
+            let followedUserPhotos = await getPhotos(userId, following);
+            followedUserPhotos.sort((a, b) => b.dateCreated - a.dateCreated);
+            setPhotos(followedUserPhotos);
         }
 
-        if(userId) {
+        if(following) {
             getTimelinePhotos();
-        } else {
-            setPhotos([]);
-        }
-
-    }, [userId]);
+        } 
+    }, [userId, following]);
 
     return photos;
 }

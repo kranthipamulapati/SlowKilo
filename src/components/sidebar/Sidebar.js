@@ -1,13 +1,10 @@
-import React, {useContext} from "react";
-
-import {UserContext} from "../../context/user";
+import React from "react";
 
 import User from "./User";
 import Suggestions from "./Suggestions";
 
-export default function Sidebar() {
+export default function Sidebar({userInfo}) {
 
-    const {userInfo} = useContext(UserContext);
     const {username, fullName} = userInfo;
 
     return (

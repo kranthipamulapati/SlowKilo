@@ -6,17 +6,18 @@ import SuggestedProfile from "./SuggestedProfile";
 
 export default function Suggestions({userInfo}) {
 
+    const {userId, following} = userInfo;
     const [profiles, setProfiles] = useState([]);
 
     useEffect(() => {
         async function suggestedProfiles() {
 
-            const results = await getSuggestedProfiles(userInfo.userId, userInfo.following);
+            const results = await getSuggestedProfiles(userId, following);
             setProfiles(results);
         }
 
         suggestedProfiles();
-    }, [userInfo.userId, userInfo.following]);
+    }, [userId, following]);
 
     return (
         <div className="rounded flex flex-col">

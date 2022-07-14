@@ -48,12 +48,29 @@ export async function updateFollowedUserFollowers(profileDocId, loggedInUserUser
 };
 
 export async function getPhotos(userId, following) {
-    let results = await getDocs(query(collection(firestore, "photos"), where(userId, "in", "following")));
 
-    return results.docs.map((photo) => ({
+    let results = await getDocs(query(collection(firestore, "photos"), where("userId", "in", following)));
+
+    const photos = results.docs.map((photo) => ({
         ...photo.data(),
         docId : photo.id
     }));
+
+    const users = await Promise.all(
+        photos.map(async (photo) => {
+            let userLikedPhoto = false;
+
+            if(photo.likes.includes(userId)) {
+                userLikedPhoto = true;
+            }
+
+            const user = await getUserByUserId(photo.userId);
+            const {username} = user;
+            return {username, ...photo, userLikedPhoto};
+        })
+    );
+
+    return users;
 };
 
 export {

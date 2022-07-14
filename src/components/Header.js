@@ -1,15 +1,11 @@
-import React, {useContext} from "react";
+import React from "react";
 import {Link} from "react-router-dom";
-
-import {UserContext} from "../context/user";
 
 import {auth, signOut} from "../utils/firebase";
 
 import * as ROUTES from "../constants/routes";
 
-export default function Header() {
-
-    const {authInfo, userInfo} = useContext(UserContext);
+export default function Header({authInfo, userInfo}) {
 
     return (
         <header className="h-16 bg-white border-b border-gray-primary mb-8">
