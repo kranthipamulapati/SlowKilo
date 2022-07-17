@@ -4,8 +4,6 @@ import {getPhotos} from "../utils/firebase";
 
 export default function usePhotos({userId, following}) {
     const [photos, setPhotos] = useState([]);
-
-    console.log(photos)
     
     useEffect(() => {
         

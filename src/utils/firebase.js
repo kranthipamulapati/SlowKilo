@@ -73,6 +73,28 @@ export async function getPhotos(userId, following) {
     return users;
 };
 
+export async function getUserByUsername(username) {
+    const results = await getDocs(query(collection(firestore, "users"), where("username", "==", username)));
+
+    const users = results.docs.map((user) => ({
+        ...user.data(),
+        docId : user.id
+    }));
+
+    return users;
+};
+
+export async function getPhotosByUsername(username) {
+    const results = await getDocs(query(collection(firestore, "photos"), where("username", "==", username)));
+
+    const photos = results.docs.map((photo) => ({
+        ...photo.data(),
+        docId : photo.id
+    }));
+
+    return photos;
+};
+
 export {
     doc,
     where, 

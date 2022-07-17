@@ -7,8 +7,6 @@ import formatDistance from "date-fns/formatDistance";
 
 export default function Comments({docId, comments: allComments, posted, commentInput}) {
 
-    console.log(allComments);
-
     const [comments, setComments] = useState(allComments);
 
     return (
